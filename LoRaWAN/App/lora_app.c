@@ -565,10 +565,18 @@ static void SendTxData(void)
   AppData.Port = LORAWAN_USER_APP_PORT;
 
 #ifdef CAYENNE_LPP
+  static uint8_t demoSequence = 0;
+  const float demoTemperature = sensor_data.temperature;
+  const float demoHumidity = sensor_data.humidity;
+  const float demoPressure = sensor_data.pressure;
+  /* Simulated measurement from an I2C sensor; replace with real reading later */
+  const float simulatedI2cReading = 100.0f + (0.5f * demoSequence);
+
   CayenneLppReset();
-  CayenneLppAddBarometricPressure(channel++, sensor_data.pressure);
-  CayenneLppAddTemperature(channel++, sensor_data.temperature);
-  CayenneLppAddRelativeHumidity(channel++, (uint16_t)(sensor_data.humidity));
+  CayenneLppAddTemperature(channel++, demoTemperature);
+  CayenneLppAddRelativeHumidity(channel++, demoHumidity);
+  CayenneLppAddBarometricPressure(channel++, demoPressure);
+  CayenneLppAddAnalogInput(channel++, simulatedI2cReading);
 
   if ((LmHandlerParams.ActiveRegion != LORAMAC_REGION_US915) && (LmHandlerParams.ActiveRegion != LORAMAC_REGION_AU915)
       && (LmHandlerParams.ActiveRegion != LORAMAC_REGION_AS923))
@@ -579,6 +587,7 @@ static void SendTxData(void)
 
   CayenneLppCopy(AppData.Buffer);
   AppData.BufferSize = CayenneLppGetSize();
+  demoSequence = (demoSequence + 1U) % 10U;
 #else  /* not CAYENNE_LPP */
   humidity    = (uint16_t)(sensor_data.humidity * 10);            /* in %*10     */
   temperature = (int16_t)(sensor_data.temperature);

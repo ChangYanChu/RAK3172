@@ -20,7 +20,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32wlxx_nucleo_radio.h"
-
+#include "stm32wlxx_hal.h"
 #include "radio_driver.h"
 
 /** @addtogroup BSP
@@ -111,30 +111,24 @@ int32_t BSP_RADIO_ConfigRFSwitch(BSP_RADIO_Switch_TypeDef Config)
   {
     case RADIO_SWITCH_OFF:
     {
-      /* Turn off switch */
-      HAL_GPIO_WritePin(RF_SW_CTRL1_GPIO_PORT, RF_SW_CTRL1_PIN, GPIO_PIN_RESET);
-      HAL_GPIO_WritePin(RF_SW_CTRL2_GPIO_PORT, RF_SW_CTRL2_PIN, GPIO_PIN_RESET);
+      /* Turn off both TX and RX switches */
+      HAL_GPIO_WritePin(RF_SW_CTRL1_GPIO_PORT, RF_SW_CTRL1_PIN, GPIO_PIN_RESET); // TX (PA6) off
+      HAL_GPIO_WritePin(RF_SW_CTRL2_GPIO_PORT, RF_SW_CTRL2_PIN, GPIO_PIN_RESET); // RX (PA7) off
       break;      
     }
     case RADIO_SWITCH_RX:
     {
-      /*Turns On in Rx Mode the RF Switch */
-      HAL_GPIO_WritePin(RF_SW_CTRL1_GPIO_PORT, RF_SW_CTRL1_PIN, GPIO_PIN_SET); 
-      HAL_GPIO_WritePin(RF_SW_CTRL2_GPIO_PORT, RF_SW_CTRL2_PIN, GPIO_PIN_RESET); 
+      /* Turn on RX, turn off TX */
+      HAL_GPIO_WritePin(RF_SW_CTRL1_GPIO_PORT, RF_SW_CTRL1_PIN, GPIO_PIN_RESET); // TX (PA6) off
+      HAL_GPIO_WritePin(RF_SW_CTRL2_GPIO_PORT, RF_SW_CTRL2_PIN, GPIO_PIN_SET);   // RX (PA7) on
       break;
     }
     case RADIO_SWITCH_RFO_LP:
-    {
-      /*Turns On in Tx Low Power the RF Switch */
-      HAL_GPIO_WritePin(RF_SW_CTRL1_GPIO_PORT, RF_SW_CTRL1_PIN, GPIO_PIN_SET); 
-      HAL_GPIO_WritePin(RF_SW_CTRL2_GPIO_PORT, RF_SW_CTRL2_PIN, GPIO_PIN_SET); 
-      break;
-    }
     case RADIO_SWITCH_RFO_HP:
     {
-      /*Turns On in Tx High Power the RF Switch */
-      HAL_GPIO_WritePin(RF_SW_CTRL1_GPIO_PORT, RF_SW_CTRL1_PIN, GPIO_PIN_RESET); 
-      HAL_GPIO_WritePin(RF_SW_CTRL2_GPIO_PORT, RF_SW_CTRL2_PIN, GPIO_PIN_SET); 
+      /* Turn on TX, turn off RX */
+      HAL_GPIO_WritePin(RF_SW_CTRL1_GPIO_PORT, RF_SW_CTRL1_PIN, GPIO_PIN_SET);   // TX (PA6) on
+      HAL_GPIO_WritePin(RF_SW_CTRL2_GPIO_PORT, RF_SW_CTRL2_PIN, GPIO_PIN_RESET); // RX (PA7) off
       break;
     }
     default:

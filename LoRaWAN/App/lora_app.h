@@ -39,12 +39,12 @@ extern "C" {
 /* Exported constants --------------------------------------------------------*/
 
 /* LoraWAN application configuration (Mw is configured by lorawan_conf.h) */
-#define ACTIVE_REGION                               LORAMAC_REGION_US915
+#define ACTIVE_REGION                               LORAMAC_REGION_CN470
 
 /*!
  * CAYENNE_LPP is myDevices Application server.
  */
-/*#define CAYENNE_LPP*/
+#define CAYENNE_LPP
 
 /*!
  * Defines the application data transmission duty cycle. 10s, value in [ms].
