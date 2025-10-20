@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.dbclient-js": "javascript",
+        "stm32wlxx_nucleo_conf.h": "c",
+        "stm32wlxx_hal.h": "c",
+        "sc7a20_driver.h": "c"
+    }
+}
